@@ -1,7 +1,7 @@
 # run setup.R prior to running this script
 library("azureml")
 
-ws <- load_workspace_from_config()
+ws <- get_workspace("r_workspace", "e9b2ec51-5c94-4fa8-809a-dc1e695e4896", "dipeck-rg1")
 
 # create aml compute
 cluster_name <- "rcluster"
@@ -22,6 +22,7 @@ experiment_name <- "train-tf-script-on-remote-amlcompute"
 exp <- experiment(ws, experiment_name)
 
 run <- submit_experiment(est, exp)
+show_run_status(run)
 wait_for_run_completion(run, show_output = TRUE)
 
 metrics <- get_run_metrics(run)
