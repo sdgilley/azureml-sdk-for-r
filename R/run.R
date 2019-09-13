@@ -76,7 +76,8 @@ cancel_run <- function(run)
 #' @param run Run object
 #' @export
 view_run_details <- function(run) {
+  viewer <- getOption("viewer")
+  viewer("http://localhost:8000")
   shinyOptions(run = run)
-  rstudioapi::jobRunScript("../../../r-widget/run_app.R")
-  rstudioapi::viewer
+  shiny::runApp(launch.browser = rstudioapi::viewer)
 }

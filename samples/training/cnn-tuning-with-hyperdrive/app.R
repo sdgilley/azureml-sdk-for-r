@@ -1,16 +1,15 @@
 library(shiny)
 
 run <- getShinyOption("run")
+details -< run$get_details()
 
 server <- function(input, output){
-  cat(3)
-  
-  details = run$get_details()
-  cat(4)
-  web_view_link = paste0('<a href="', run$get_portal_url(),'">', "Link", "</a>")
 
+  start_time = details$startTimeUtc
+  web_view_link = paste0('<a href="', run$get_portal_url(),'">', "Link", "</a>")
+  
   output$runDetails <- renderDataTable({
-    
+
     invalidateLater(2000)
     
     status <- run$get_status()
@@ -21,7 +20,7 @@ server <- function(input, output){
     else {
       duration <- "-"
     }
-
+    
     df <- matrix(list("Run Id",
                       "Status",
                       "Start Time",
@@ -32,22 +31,22 @@ server <- function(input, output){
                       "Web View",
                       run$id,
                       status,
-                      details$startTimeUtc,
+                      start_time,
                       duration,
                       details$runDefinition$target,
                       details$runDefinition$script,
                       toString(details$runDefinition$arguments),
                       web_view_link),
-                   nrow = 8,
-                   ncol = 2) 
-
+                 nrow = 8,
+                 ncol = 2) 
+    
     datatable(df,
-                  escape = FALSE,
-                  rownames = FALSE,
-                  colnames = c(" ", " "),
-                  caption = paste(unlist(details$warnings), collapse='\r\n'),
-                  options = list(dom = 't', scrollY = TRUE))
-    })
+              escape = FALSE,
+              rownames = FALSE,
+              colnames = c(" ", " "),
+              caption = paste(unlist(details$warnings), collapse='\r\n'),
+              options = list(dom = 't', scrollY = TRUE))
+  })
 }
 
 ui <- basicPage(
@@ -56,4 +55,4 @@ ui <- basicPage(
   )
 )
 
-shinyApp(ui, server)
+shinyApp(ui = ui, server = server)
