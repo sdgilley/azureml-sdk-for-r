@@ -1,4 +1,5 @@
-# run setup.R prior to running this script
+# run setup.R to setup workspace for the first time
+# set working directory to current file location prior to running this script
 library(azureml)
 
 ws <- get_workspace("r_workspace", "e9b2ec51-5c94-4fa8-809a-dc1e695e4896", "dipeck-rg1")
