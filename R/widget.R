@@ -1,17 +1,16 @@
 library(shiny)
-cat(1)
+library(DT)
+
 run <- getShinyOption("run")
-cat(2)
 
 server <- function(input, output){
-  cat(3)
   
   details = run$get_details()
   start_time = details$startTimeUtc
   web_view_link = paste0('<a href="', run$get_portal_url(),'">', "Link", "</a>")
   
   output$runDetails <- renderDataTable({
-    cat(4)
+    
     invalidateLater(2000)
     
     status <- run$get_status()
@@ -33,7 +32,7 @@ server <- function(input, output){
                       "Web View",
                       run$id,
                       status,
-                      start_time,
+                      Sys.time(),
                       duration,
                       details$runDefinition$target,
                       details$runDefinition$script,
