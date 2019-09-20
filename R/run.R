@@ -76,6 +76,13 @@ cancel_run <- function(run)
 #' @param run Run object
 #' @export
 view_run_details <- function(run) {
+  library(here)
+
+  path <- here("R", "app", "run_app.R")
+               
   shinyOptions(run = run)
-  shiny::runApp("../../../R/widget.R", launch.browser = rstudioapi::viewer)
+  rstudioapi::jobRunScript(path,
+                           workingDir = "C:/Users/dipeck/Documents/azureml-sdk-for-r/samples/training/cnn-tuning-with-hyperdrive",
+                           importEnv = TRUE)
+  rstudioapi::viewer("http://127.0.0.1:8000")
 }
