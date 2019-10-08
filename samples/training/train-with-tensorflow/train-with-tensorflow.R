@@ -2,17 +2,16 @@
 # set working directory to current file location prior to running this script
 library("azureml")
 
-ws <- load_workspace_from_config()
+ws <- get_workspace("r_workspace", "e9b2ec51-5c94-4fa8-809a-dc1e695e4896", "dipeck-rg1")
 
 # create aml compute
 cluster_name <- "rcluster"
 compute_target <- get_compute(ws, cluster_name = cluster_name)
-if (is.null(compute_target)) {
+if (is.null(compute_target))
+{
   vm_size <- "STANDARD_NC6"
-  compute_target <- create_aml_compute(workspace = ws,
-                                       cluster_name = cluster_name,
-                                       vm_size = vm_size,
-                                       max_nodes = 1)
+  compute_target <- create_aml_compute(workspace = ws, cluster_name = cluster_name,
+                                       vm_size = vm_size, max_nodes = 1)
 }
 wait_for_provisioning_completion(compute_target)
 

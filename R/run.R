@@ -277,45 +277,22 @@ log_table_to_run <- function(name, value, description = "", run = NULL) {
   invisible(NULL)
 }
 
-#' Plot table of run details in Viewer
-#' @param run run used for plotting
+#' Show run details in viewer pane
+#' @param run Run object
 #' @export
 view_run_details <- function(run) {
-  status <- run$get_status()
-  details <- run$get_details()
-  web_view_link <- paste0('<a href="', run$get_portal_url(), '">',
-                          "Link", "</a>")
+  library(here)
 
-  if (status == "Completed" || status == "Failed") {
-    diff <- (parse_iso_8601(details$endTimeUtc) -
-               parse_iso_8601(details$startTimeUtc))
-    duration <- paste(as.numeric(diff), "mins")
-  }
-  else {
-    duration <- "-"
-  }
+  run_url <- run$get_portal_url()
+  
+  assign("run_url", run_url, envir=globalenv())
 
-  df <- matrix(list("Run Id",
-                    "Status",
-                    "Start Time",
-                    "Duration",
-                    "Target",
-                    "Script Name",
-                    "Arguments",
-                    "Web View",
-                    run$id,
-                    status,
-                    format(parsedate::parse_iso_8601(details$startTimeUtc),
-                           format = "%B %d %Y %H:%M:%S"),
-                    duration,
-                    details$runDefinition$target,
-                    details$runDefinition$script,
-                    toString(details$runDefinition$arguments),
-                    web_view_link),
-               nrow = 8,
-               ncol = 2)
+  path <- here("R", "app", "app.R")
+  
+  rstudioapi::jobRunScript(path,
+                           importEnv = TRUE)
 
-  DT::datatable(df, escape = FALSE, rownames = FALSE, colnames = c(" ", " "),
-                caption = paste(unlist(details$warnings), collapse = "\r\n"),
-                options = list(dom = "t", scrollY = TRUE))
+  rstudioapi::viewer("http://localhost:8000")
+
 }
+
